@@ -1,0 +1,171 @@
+[
+    {
+        "user": "6803be99d17510cc75587785",
+        "items": [
+            {
+                "product": "6803c811fc9b356b3758106b",
+                "quantity": 1,
+                "priceAtPurchase": 1199
+            },
+            {
+                "product": "6803c811fc9b356b37581070",
+                "quantity": 1,
+                "priceAtPurchase": 799
+            }
+        ],
+        "totalPrice": 1998
+    },
+    {
+        "user": "6803be99d17510cc75587785",
+        "items": [
+            {
+                "product": "6803c811fc9b356b37581075",
+                "quantity": 1,
+                "priceAtPurchase": 379
+            },
+            {
+                "product": "6803c811fc9b356b37581072",
+                "quantity": 2,
+                "priceAtPurchase": 49
+            }
+        ],
+        "totalPrice": 477
+    },
+    {
+        "user": "6803be99d17510cc75587785",
+        "items": [
+            {
+                "product": "6803c811fc9b356b3758107b",
+                "variant": "M",
+                "quantity": 2,
+                "priceAtPurchase": 19.99
+            },
+            {
+                "product": "6803c811fc9b356b3758107b",
+                "variant": "L",
+                "quantity": 1,
+                "priceAtPurchase": 39.99
+            }
+        ],
+        "totalPrice": 79.97
+    },
+    {
+        "user": "6803be8bd17510cc75587782",
+        "items": [
+            {
+                "product": "6803c811fc9b356b37581089",
+                "variant": "L",
+                "quantity": 1,
+                "priceAtPurchase": 34.99
+            },
+            {
+                "product": "6803c811fc9b356b37581085",
+                "variant": "M",
+                "quantity": 2,
+                "priceAtPurchase": 44.99
+            }
+        ],
+        "totalPrice": 124.97
+    },
+    {
+        "user": "6803be8bd17510cc75587782",
+        "items": [
+            {
+                "product": "6803c811fc9b356b37581089",
+                "variant": "XS",
+                "quantity": 1,
+                "priceAtPurchase": 24.99
+            },
+            {
+                "product": "6803c811fc9b356b37581085",
+                "variant": "S",
+                "quantity": 2,
+                "priceAtPurchase": 44.99
+            }
+        ],
+        "totalPrice": 69.98
+    },
+    {
+        "user": "6803be8bd17510cc75587782",
+        "items": [
+            {
+                "product": "6803c811fc9b356b3758108c",
+                "variant": "500ml",
+                "quantity": 3,
+                "priceAtPurchase": 1.99
+            },
+            {
+                "product": "6803c811fc9b356b3758108f",
+                "variant": "250ml",
+                "quantity": 2,
+                "priceAtPurchase": 2.49
+            }
+        ],
+        "totalPrice": 9.55
+    },
+    {
+        "user": "6803b40a6337c7feb157976a",
+        "items": [
+            {
+                "product": "6803c811fc9b356b3758108f",
+                "variant": "250ml",
+                "quantity": 2,
+                "priceAtPurchase": 2.49
+            },
+            {
+                "product": "6803c811fc9b356b37581094",
+                "variant": "1.5L",
+                "quantity": 1,
+                "priceAtPurchase": 0.99
+            }
+        ],
+        "totalPrice": 5.97
+    },
+    {
+        "user": "6803b40a6337c7feb157976a",
+        "items": [
+            {
+                "product": "6803c811fc9b356b37581092",
+                "variant": "250ml",
+                "quantity": 4,
+                "priceAtPurchase": 2.99
+            }
+        ],
+        "totalPrice": 11.96
+    },
+    {
+        "user": "6803b40a6337c7feb157976a",
+        "items": [
+            {
+                "product": "6803c811fc9b356b37581073",
+                "quantity": 1,
+                "priceAtPurchase": 599
+            },
+            {
+                "product": "6803c811fc9b356b37581085",
+                "variant": "S",
+                "quantity": 1,
+                "priceAtPurchase": 44.99
+            }
+        ],
+        "totalPrice": 643.99
+    },
+    {
+        "user": "6803b40a6337c7feb157976a",
+        "items": [
+            {
+                "product": "6803c811fc9b356b37581077",
+                "variant": "M",
+                "quantity": 1,
+                "priceAtPurchase": 19.99
+            },
+            {
+                "product": "6803c811fc9b356b3758108c",
+                "variant": "330ml",
+                "quantity": 2,
+                "priceAtPurchase": 1.99
+            }
+        ],
+        "totalPrice": 38.97
+    }
+]

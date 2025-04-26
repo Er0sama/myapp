@@ -1,0 +1,278 @@
+[
+    {
+        "name": "iPhone 15 Pro",
+        "price": 1199,
+        "featured": true,
+        "rating": 4.8,
+        "company": "apple",
+        "category": "6803a1ea00db13330095cca6"
+    },
+    {
+        "name": "Samsung Galaxy S24",
+        "price": 999,
+        "featured": false,
+        "rating": 4.5,
+        "company": "samsung",
+        "category": "6803a1ea00db13330095cca6"
+    },
+    {
+        "name": "Dell XPS 15",
+        "price": 1499,
+        "featured": true,
+        "rating": 4.7,
+        "company": "dell",
+        "category": "6803a1ea00db13330095cca6"
+    },
+    {
+        "name": "Redmi Note 13",
+        "price": 299,
+        "featured": false,
+        "rating": 4.2,
+        "company": "mi",
+        "category": "6803a1ea00db13330095cca6"
+    },
+    {
+        "name": "Apple MacBook Air M3",
+        "price": 1299,
+        "featured": true,
+        "rating": 4.9,
+        "company": "apple",
+        "category": "6803a1ea00db13330095cca6"
+    },
+    {
+        "name": "Samsung Galaxy Tab S9",
+        "price": 799,
+        "featured": false,
+        "rating": 4.3,
+        "company": "samsung",
+        "category": "6803a1ea00db13330095cca6"
+    },
+    {
+        "name": "Dell Inspiron 14",
+        "price": 699,
+        "featured": true,
+        "rating": 4.1,
+        "company": "dell",
+        "category": "6803a1ea00db13330095cca6"
+    },
+    {
+        "name": "Mi Smart Band 8",
+        "price": 49,
+        "featured": false,
+        "rating": 3.9,
+        "company": "mi",
+        "category": "6803a1ea00db13330095cca6"
+    },
+    {
+        "name": "Apple iPad Air",
+        "price": 599,
+        "featured": true,
+        "rating": 4.6,
+        "company": "apple",
+        "category": "6803a1ea00db13330095cca6"
+    },
+    {
+        "name": "Samsung Smart TV QLED 55\"",
+        "price": 1099,
+        "featured": true,
+        "rating": 4.4,
+        "company": "samsung",
+        "category": "6803a1ea00db13330095cca6"
+    },
+    {
+        "name": "Dell Ultrasharp Monitor 27\"",
+        "price": 379,
+        "featured": false,
+        "rating": 4.2,
+        "company": "dell",
+        "category": "6803a1ea00db13330095cca6"
+    },
+    {
+        "name": "Mi Electric Scooter Pro 2",
+        "price": 499,
+        "featured": true,
+        "rating": 4.0,
+        "company": "mi",
+        "category": "6803a1ea00db13330095cca6"
+    },
+    {
+        "name": "Men's T-Shirt",
+        "price": 19.99,
+        "company": "nike",
+        "category": "6803a23000db13330095cca8",
+        "variants": [
+            {
+                "size": "S",
+                "stock": 10
+            },
+            {
+                "size": "M",
+                "stock": 8
+            },
+            {
+                "size": "L",
+                "stock": 5
+            }
+        ]
+    },
+    {
+        "name": "Women's Hoodie",
+        "price": 39.99,
+        "company": "adidas",
+        "category": "6803a23000db13330095cca8",
+        "variants": [
+            {
+                "size": "M",
+                "stock": 6
+            },
+            {
+                "size": "L",
+                "stock": 4
+            },
+            {
+                "size": "XL",
+                "stock": 3
+            }
+        ]
+    },
+    {
+        "name": "Unisex Joggers",
+        "price": 29.99,
+        "company": "puma",
+        "category": "6803a23000db13330095cca8",
+        "variants": [
+            {
+                "size": "S",
+                "stock": 12
+            },
+            {
+                "size": "M",
+                "stock": 10
+            }
+        ]
+    },
+    {
+        "name": "Men's Formal Shirt",
+        "price": 34.99,
+        "company": "zara",
+        "category": "6803a23000db13330095cca8",
+        "variants": [
+            {
+                "size": "M",
+                "stock": 7
+            },
+            {
+                "size": "L",
+                "stock": 6
+            }
+        ]
+    },
+    {
+        "name": "Women's Jeans",
+        "price": 44.99,
+        "company": "levis",
+        "category": "6803a23000db13330095cca8",
+        "variants": [
+            {
+                "size": "S",
+                "stock": 9
+            },
+            {
+                "size": "M",
+                "stock": 8
+            },
+            {
+                "size": "L",
+                "stock": 6
+            }
+        ]
+    },
+    {
+        "name": "Kids' Jacket",
+        "price": 24.99,
+        "company": "hm",
+        "category": "6803a23000db13330095cca8",
+        "variants": [
+            {
+                "size": "XS",
+                "stock": 5
+            },
+            {
+                "size": "S",
+                "stock": 4
+            }
+        ]
+    },
+    {
+        "name": "Cola Drink",
+        "price": 1.99,
+        "company": "coca-cola",
+        "category": "6803a24000db13330095ccaa",
+        "variants": [
+            {
+                "size": "330ml",
+                "stock": 30
+            },
+            {
+                "size": "500ml",
+                "stock": 20
+            }
+        ]
+    },
+    {
+        "name": "Orange Juice",
+        "price": 2.49,
+        "company": "tropicana",
+        "category": "6803a24000db13330095ccaa",
+        "variants": [
+            {
+                "size": "250ml",
+                "stock": 25
+            },
+            {
+                "size": "1L",
+                "stock": 15
+            }
+        ]
+    },
+    {
+        "name": "Energy Drink",
+        "price": 2.99,
+        "company": "redbull",
+        "category": "6803a24000db13330095ccaa",
+        "variants": [
+            {
+                "size": "250ml",
+                "stock": 40
+            }
+        ]
+    },
+    {
+        "name": "Bottled Water",
+        "price": 0.99,
+        "company": "nestle",
+        "category": "6803a24000db13330095ccaa",
+        "variants": [
+            {
+                "size": "500ml",
+                "stock": 50
+            },
+            {
+                "size": "1.5L",
+                "stock": 30
+            }
+        ]
+    },
+    {
+        "name": "Iced Tea",
+        "price": 1.79,
+        "company": "lipton",
+        "category": "6803a24000db13330095ccaa",
+        "variants": [
+            {
+                "size": "500ml",
+                "stock": 18
+            }
+        ]
+    }
+]
