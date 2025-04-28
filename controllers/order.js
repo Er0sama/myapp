@@ -46,7 +46,7 @@ const createOrder = asyncHandler(async (req, res) => {
         // Check if the product exists
         const foundProduct = await Product.findById(item.product);
         if (!foundProduct) {
-            res.status(400).json({ message: "Product included in order doesnot exist" });
+            return res.status(400).json({ message: "Product included in order does not exist" });
         }
 
     }
@@ -144,6 +144,9 @@ const updateOrder = asyncHandler(async (req, res) => {
         return res.status(404).json({ message: "Order not found" });
     }
 
+    if (order.status === status) {
+        return res.status(400).json({ message: "The order is already in the requested status" });
+    }
     order.status = status;
     const updatedOrder = await order.save();
 

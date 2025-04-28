@@ -1,13 +1,13 @@
 const Product = require("../model/product");
 const asyncHandler = require("../middleware/asyncHandler");
 const validateVariantsByCategory = require("../utils/variantValidator");
+const Category = require("../model/category");
 const mongoose = require("mongoose");
-// get all products
+
 const getAllProducts = asyncHandler(async (req, res) => {
     const { company, name, featured, sort, select, page, limit } = req.query;
     const queryObj = {};
 
-    // Query validations
     if (company) queryObj.company = company;
     if (featured) queryObj.featured = featured === 'true';
     if (name) queryObj.name = { $regex: name, $options: 'i' };
@@ -50,33 +50,131 @@ const getAllProducts = asyncHandler(async (req, res) => {
     });
 });
 
-const updateProductDescription = asyncHandler(async (req, res) => {
-    const { id } = req.params;
-    const { description } = req.body;
-
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(400).json({ message: "Invalid product ID" });
+const viewProductsByCategory = asyncHandler(async (req, res) => {
+    const { category } = req.params;
+    console.log("req.params =>", req.params); // ADD THIS LINE
+    console.log(category);
+    if (!category) {
+        return res.status(400).json({ success: false, message: "Category name is required" });
     }
 
-    if (!description || typeof description !== "string" || description.length > 1000) {
-        return res.status(400).json({ message: "Valid description is required (max 1000 chars)" });
+    if (category.length >= 20) {
+        return res.status(400).json({ success: false, message: "Invalid category length." });
     }
 
-    const updatedProduct = await Product.findByIdAndUpdate(
-        id,
-        { description },
-        { new: true, runValidators: true }
-    );
+    const categoryDoc = await Category.findOne({ name: { $regex: `^${category}$`, $options: 'i' } });
 
-    if (!updatedProduct) {
-        return res.status(404).json({ message: "Product not found" });
+    if (!categoryDoc) {
+        return res.status(404).json({ success: false, message: "Category not found" });
+    }
+
+    const products = await Product.find({ category: categoryDoc._id }).populate("category", "name");
+
+    if (products.length === 0) {
+        return res.status(404).json({ success: false, message: `No products found in category: ${category}` });
     }
 
     res.status(200).json({
-        message: "Product description updated successfully",
+        success: true,
+        count: products.length,
+        products,
+    });
+});
+
+
+const updateProduct = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({ success: false, message: "Invalid product ID" });
+    }
+
+    const updateData = { ...req.body };
+
+    // Handle image update if a new file is uploaded
+    if (req.file) {
+        updateData.image = `/uploads/${req.file.filename}`;
+    }
+
+    // Validations
+    if (updateData.name) {
+        if (typeof updateData.name !== "string" || updateData.name.length > 30) {
+            return res.status(400).json({ success: false, message: "Name must be a string with max 30 characters" });
+        }
+    }
+
+    if (updateData.price) {
+        if (isNaN(updateData.price) || updateData.price <= 0) {
+            return res.status(400).json({ success: false, message: "Price must be a positive number" });
+        }
+    }
+
+    if (updateData.description) {
+        if (typeof updateData.description !== "string" || updateData.description.length > 1000) {
+            return res.status(400).json({ success: false, message: "Description must be a string with max 1000 characters" });
+        }
+    }
+
+    if (updateData.featured !== undefined) {
+        if (typeof updateData.featured !== "boolean") {
+            return res.status(400).json({ success: false, message: "Featured must be true or false" });
+        }
+    }
+
+    if (updateData.rating) {
+        if (isNaN(updateData.rating) || updateData.rating < 1 || updateData.rating > 5) {
+            return res.status(400).json({ success: false, message: "Rating must be a number between 1 and 5" });
+        }
+    }
+
+    if (updateData.company) {
+        const allowedCompanies = ["apple", "samsung", "dell", "mi", "levis", "coca-cola", "nike", "puma", "adidas", "hm", "tropicana", "redbull", "nestle", "lipton", "zara"];
+        if (!allowedCompanies.includes(updateData.company)) {
+            return res.status(400).json({ success: false, message: "Company is not allowed" });
+        }
+    }
+
+    if (updateData.stock) {
+        if (isNaN(updateData.stock) || updateData.stock < 0) {
+            return res.status(400).json({ success: false, message: "Stock must be a non-negative number" });
+        }
+    }
+
+    // Validate variants if updating
+    if (updateData.variants) {
+        if (!Array.isArray(updateData.variants)) {
+            return res.status(400).json({ success: false, message: "Variants must be an array" });
+        }
+
+        for (let variant of updateData.variants) {
+            if (!variant.size || typeof variant.size !== "string") {
+                return res.status(400).json({ success: false, message: "Each variant must have a valid size (string)" });
+            }
+            if (variant.stock !== undefined && (isNaN(variant.stock) || variant.stock < 0)) {
+                return res.status(400).json({ success: false, message: "Each variant must have a non-negative stock" });
+            }
+            if (variant.price !== undefined && (isNaN(variant.price) || variant.price < 0)) {
+                return res.status(400).json({ success: false, message: "Each variant price must be non-negative" });
+            }
+        }
+    }
+
+    const updatedProduct = await Product.findByIdAndUpdate(id, updateData, {
+        new: true,
+        runValidators: true,
+    }).populate("category", "name");
+
+    if (!updatedProduct) {
+        return res.status(404).json({ success: false, message: "Product not found" });
+    }
+
+    res.status(200).json({
+        success: true,
+        message: "Product updated successfully",
         product: updatedProduct,
     });
 });
+
 
 
 const addProduct = asyncHandler(async (req, res) => {
@@ -90,104 +188,103 @@ const addProduct = asyncHandler(async (req, res) => {
         category,
         variants,
         stock,
+        description,
     } = req.body;
 
-    const image = req.file ? `/uploads/${req.file.filename}` : null;
+    const image = req.file ? `/uploads/${req.file.filename}` : undefined; // not null, undefined is cleaner here
 
-    // check if Product with name already exists
-    const existingProduct = await Product.findOne({
-        name: { $regex: `^${name}$`, $options: 'i' }
-    });
-    if (existingProduct.name === name) {
-        return res.status(400).json({ message: "Product with the same name already exists" });
+    // Check if Product with same name already exists
+    if (await Product.findOne({ name: { $regex: `^${name}$`, $options: 'i' } })) {
+        return res.status(400).json({ success: false, message: "Product with the same name already exists" });
     }
+
     // Validate required fields
     if (!name || !price || !company || !category) {
-        return res.status(400).json({ message: "Name, price, company, and category are required" });
+        return res.status(400).json({ success: false, message: "Name, price, company, and category are required" });
     }
-    if (name.length > 30) {
-        return res.status(400).json({ message: "Name is too long (max 30 characters)" });
+    if (typeof name !== "string" || name.length > 30) {
+        return res.status(400).json({ success: false, message: "Name must be a string of max 30 characters" });
     }
 
-    // Validate price
     if (typeof price !== 'number' || price <= 0) {
-        return res.status(400).json({ message: "Price must be a positive number" });
+        return res.status(400).json({ success: false, message: "Price must be a positive number" });
     }
 
-    // Validate rating (optional but should be a number between 1 and 5)
     if (rating && (typeof rating !== 'number' || rating < 1 || rating > 5)) {
-        return res.status(400).json({ message: "Rating must be between 1 and 5" });
+        return res.status(400).json({ success: false, message: "Rating must be between 1 and 5" });
     }
 
-    // Validate stock (if it's provided, it should be a number)
     if (stock && (typeof stock !== 'number' || stock < 0)) {
-        return res.status(400).json({ message: "Stock must be a non-negative number" });
+        return res.status(400).json({ success: false, message: "Stock must be a non-negative number" });
+    }
+
+    if (description && (typeof description !== 'string' || description.length > 1000)) {
+        return res.status(400).json({ success: false, message: "Description must be a string of max 1000 characters" });
+    }
+
+    if (variants && !Array.isArray(variants)) {
+        return res.status(400).json({ success: false, message: "Variants must be an array" });
     }
 
     // Validate variants if provided
     if (variants && variants.length > 0) {
-        // Ensure each variant has a valid structure
         for (let variant of variants) {
             if (!variant.size || typeof variant.size !== 'string') {
-                return res.status(400).json({ message: "Each variant must have a valid option (string)" });
+                return res.status(400).json({ success: false, message: "Each variant must have a valid size (string)" });
             }
-            if (!variant.stock || typeof variant.stock !== 'number' || variant.stock < 0) {
-                return res.status(400).json({ message: "Each variant must have a valid stock number (non-negative)" });
+            if (variant.size.length > 20) {
+                return res.status(400).json({ success: false, message: "Variant size must be max 20 characters" });
+            }
+            if (variant.stock == undefined || typeof variant.stock !== 'number' || variant.stock < 0) {
+                return res.status(400).json({ success: false, message: "Each variant must have a non-negative stock" });
             }
             if (variant.price && (typeof variant.price !== 'number' || variant.price < 0)) {
-                return res.status(400).json({ message: "Variant price must be a non-negative number" });
+                return res.status(400).json({ success: false, message: "Variant price must be a non-negative number" });
             }
-
         }
         try {
             await validateVariantsByCategory(category, variants);
         } catch (error) {
-            return res.status(400).json({ message: error.message });
+            return res.status(400).json({ success: false, message: error.message });
         }
     }
 
-    // If variants are provided, create product with variants
-    let newProduct;
-    if (variants && variants.length > 0) {
+    const productData = {
+        name,
+        price,
+        featured,
+        rating,
+        createdAt,
+        company,
+        category,
+        stock,
+        description,
+        variants,
+    };
 
-
-        newProduct = await Product.create({
-            name,
-            price,
-            featured,
-            rating,
-            createdAt,
-            company,
-            category,
-            variants,
-        });
-    } else {
-        // If no variants, create product with regular stock
-        newProduct = await Product.create({
-            name,
-            price,
-            featured,
-            rating,
-            createdAt,
-            company,
-            category,
-            stock,
-        });
+    if (image) {
+        productData.image = image;
     }
 
-    res.status(201).json({ message: "Product created successfully", product: newProduct });
+    const newProduct = await Product.create(productData);
+
+    res.status(201).json({ success: true, message: "Product created successfully", product: newProduct });
 });
 
 const deleteProduct = asyncHandler(async (req, res) => {
-    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-        return res.status(400).json({ error: "Invalid ID format" });
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({ success: false, message: "Invalid product ID format" });
     }
 
-    const deleted = await Product.findByIdAndDelete(req.params.id); S
-    if (!deleted) {
-        return res.status(404).json({ message: "Product not found" });
+    const deletedProduct = await Product.findByIdAndDelete(id);
+
+    if (!deletedProduct) {
+        return res.status(404).json({ success: false, message: "Product not found" });
     }
-    res.status(200).json({ message: "Product removed" });
+
+    res.status(200).json({ success: true, message: "Product deleted successfully" });
 });
 
 const getAllProductsTesting = asyncHandler(async (req, res) => {
@@ -211,5 +308,6 @@ module.exports = {
     addProduct,
     deleteProduct,
     getAllProductsTesting,
-    updateProductDescription
+    updateProduct,
+    viewProductsByCategory,
 };
