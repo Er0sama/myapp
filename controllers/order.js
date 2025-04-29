@@ -2,6 +2,7 @@ const asyncHandler = require("../middleware/asyncHandler");
 const Order = require("../model/order");
 const Product = require("../model/product");
 const User = require("../model/user");
+const { saveAddress, validateAddress } = require("../utils/saveAddress");
 const mongoose = require("mongoose");
 
 // Utility function to calculate total price from items
@@ -24,14 +25,18 @@ const validateAndFixTotalPrice = async (items) => {
     return { totalPrice };
 };
 
+
 const createOrder = asyncHandler(async (req, res) => {
-    const { user, items, totalPrice } = req.body;
+    const { user, items, totalPrice, address } = req.body;
 
     if (!user || !items || !Array.isArray(items) || items.length === 0 || totalPrice === undefined) {
         return res.status(400).json({ message: "User, items, and totalPrice are required" });
     }
 
     // Check if user exists
+    if (!mongoose.Types.ObjectId.isValid(user)) {
+        return res.status(400).json({ success: false, message: "Invalid ID" });
+    }
     const foundUser = await User.findById(user);
     if (!foundUser) {
         return res.status(404).json({ message: "User not found" });
@@ -61,14 +66,42 @@ const createOrder = asyncHandler(async (req, res) => {
     if (fixedTotalPrice !== totalPrice) {
         console.warn(`Client provided incorrect total (${totalPrice}), corrected to ${fixedTotalPrice}`);
     }
+    // Validate address once
+    const addressValidationError = validateAddress(address);
+    if (addressValidationError) {
+        return res.status(400).json({ message: addressValidationError });
+    }
+    console.log(address);
 
     const newOrder = await Order.create({
         user,
         items,
         totalPrice: fixedTotalPrice,
+        addressSnapshot: {
+            fullName: address.fullName,
+            email: address.email,
+            phone: address.phone,
+            street: address.street,
+            city: address.city,
+            province: address.province,
+            state: address.state,
+            postalCode: address.postalCode,
+            country: address.country
+        }
     });
+    console.log("code running till here")
+    // Save the order with the address snapshot
+    await newOrder.save();
+
+    // If the user is registered, also save the address to the Address collection
+    let savedAddress = null;
+    if (foundUser.registered) {
+        savedAddress = await saveAddress(address, foundUser._id);
+    }
+
 
     res.status(201).json({ message: "Order placed", order: newOrder });
+
 });
 
 const getAllOrders = asyncHandler(async (req, res) => {
