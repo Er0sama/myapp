@@ -41,20 +41,23 @@ const createOrder = asyncHandler(async (req, res) => {
     if (!foundUser) {
         return res.status(404).json({ message: "User not found" });
     }
+    const productIds = items.map(item => item.product);
+    const productsMap = new Map(
+        (await Product.find({ _id: { $in: productIds } })).map(p => [p._id.toString(), p])
+    );
+
     for (const item of items) {
-        // Validate item fields
         if (!item.product || !item.quantity || !item.priceAtPurchase) {
             res.status(400);
             throw new Error("Each item must include product, quantity, and priceAtPurchase");
         }
 
-        // Check if the product exists
-        const foundProduct = await Product.findById(item.product);
+        const foundProduct = productsMap.get(item.product);
         if (!foundProduct) {
-            return res.status(400).json({ message: "Product included in order does not exist" });
+            return res.status(400).json({ message: `Product ${item.product} does not exist` });
         }
-
     }
+
 
     const result = await validateAndFixTotalPrice(items);
     if (result.error) {
@@ -89,10 +92,8 @@ const createOrder = asyncHandler(async (req, res) => {
             country: address.country
         }
     });
-    console.log("code running till here")
+    //console.log("code running till here")
     // Save the order with the address snapshot
-    await newOrder.save();
-
     // If the user is registered, also save the address to the Address collection
     let savedAddress = null;
     if (foundUser.registered) {

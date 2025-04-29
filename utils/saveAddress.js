@@ -43,6 +43,23 @@ const saveAddress = async (data, userId = null) => {
     const countryError = validateStringField(country, "Country", { min: 2, max: 50 });
     if (countryError) throw new Error(countryError);
 
+    const existingAddress = await Address.findOne({
+        user: userId,
+        fullName,
+        email,
+        phone,
+        street,
+        city,
+        state,
+        province,
+        postalCode,
+        country,
+    });
+
+    if (existingAddress) {
+        console.log("Address already exists, skipping.");
+        return existingAddress;
+    }
     // Create and save address
     const address = new Address({
         fullName,
