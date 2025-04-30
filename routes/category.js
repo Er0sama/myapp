@@ -6,9 +6,10 @@ const {
     addCategory,
     deleteCategory
 } = require("../controllers/category");
+const { authenticate, isAdmin } = require("../middleware/authMiddleware");
 
 router.get("/", rateLimiter, getAllCategories);
-router.post("/add", addCategory);
-router.delete("/delete/:id", deleteCategory);
+router.post("/add", authenticate, isAdmin, addCategory);
+router.delete("/delete/:id",authenticate,isAdmin, deleteCategory);
 
 module.exports = router;

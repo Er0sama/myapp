@@ -204,7 +204,8 @@ const getOrdersByUserId = asyncHandler(async (req, res) => {
             path: "items.product",
             select: "name price -_id", // Exclude _id from product
         })
-        .select("-_id"); // Exclude id from order
+        .select("-_id")
+        .lean(); // Exclude id from order
 
     // Check if orders are found
     if (orders.length === 0) {

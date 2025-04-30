@@ -122,6 +122,8 @@ const getAllOrders = asyncHandler(async (req, res) => {
     const totalOrders = await Order.countDocuments(queryObj);
     const totalPages = Math.ceil(totalOrders / limit_num);
 
+    query = query.lean();
+
     const orders = await query.skip(skip).limit(limit_num);
 
     res.status(200).json({

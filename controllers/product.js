@@ -34,7 +34,7 @@ const getAllProducts = asyncHandler(async (req, res) => {
     let limit_num = Number(limit) || 4
 
     let skip = (page_num - 1) * limit_num
-
+    query = query.lean();
     query = query.skip(skip).limit(limit_num)
 
     const totalProducts = await Product.countDocuments(queryObj);

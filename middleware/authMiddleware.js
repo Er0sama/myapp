@@ -3,11 +3,11 @@ const User = require("../model/user");
 
 const authenticate = async (req, res, next) => {
     let token;
-    console.log("This is token being sent:", req.headers.authorization)
+    //console.log("This is token being sent:", req.headers.authorization)
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
         try {
             token = req.headers.authorization.split(' ')[1];
-            console.log("after split:", token)
+            //console.log("after split:", token)
             const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
             req.user = await User.findById(decoded.id).select('-password');
             next();

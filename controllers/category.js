@@ -3,7 +3,7 @@ const Category = require("../model/category");
 const mongoose = require("mongoose");
 
 const getAllCategories = asyncHandler(async (req, res) => {
-    const categories = await Category.find({});
+    const categories = await Category.find({}).lean();
     res.status(200).json(categories);
 });
 
