@@ -74,7 +74,6 @@ const createOrder = asyncHandler(async (req, res) => {
     if (addressValidationError) {
         return res.status(400).json({ message: addressValidationError });
     }
-    console.log(address);
 
     const newOrder = await Order.create({
         user,
