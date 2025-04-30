@@ -93,14 +93,6 @@ const createOrder = asyncHandler(async (req, res) => {
         }
     });
     //console.log("code running till here")
-    // Save the order with the address snapshot
-    // If the user is registered, also save the address to the Address collection
-    let savedAddress = null;
-    if (foundUser.registered) {
-        savedAddress = await saveAddress(address, foundUser._id);
-    }
-
-
     res.status(201).json({ message: "Order placed", order: newOrder });
 
 });
