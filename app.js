@@ -1,5 +1,6 @@
 require("dotenv").config();
 const express = require('express');
+const cors = require('cors');
 const app = express();
 
 
@@ -11,6 +12,8 @@ const order_routes = require("./routes/order");
 const category_routes = require("./routes/category");
 const axios_testing = require("./routes/axiosTesting");
 const path = require('path');
+
+app.use(cors());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(express.json());
 
